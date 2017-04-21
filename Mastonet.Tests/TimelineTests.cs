@@ -1,36 +1,37 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
 
 namespace Mastonet.Tests
 {
+    [TestClass]
     public class TimelineTests : MastodonClientTests
     {
-        [Fact]
+        [TestMethod]
         public async Task GetHomeTimeline()
         {
             var client = GetReadClient();
             var timeline = await client.GetHomeTimeline();
-            Assert.NotNull(timeline);
+            Assert.IsNotNull(timeline);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetPublicTimeline()
         {
             var client = GetReadClient();
             var timeline = await client.GetPublicTimeline();
-            Assert.NotNull(timeline);
+            Assert.IsNotNull(timeline);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetTagTimeline()
         {
             var client = GetReadClient();
             var timeline = await client.GetTagTimeline("mastodon");
-            Assert.NotNull(timeline);
+            Assert.IsNotNull(timeline);
         }
     }
 }

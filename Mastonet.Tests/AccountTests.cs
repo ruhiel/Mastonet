@@ -1,45 +1,46 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Mastonet.Tests
 {
+    [TestClass]
     public class AccountTests : MastodonClientTests
     {
-        [Fact]
+        [TestMethod]
         public async Task GetAccount()
         {
             var client = GetReadClient();
 
             var account = await client.GetAccount(1);
 
-            Assert.NotNull(account.ProfileUrl);
-            Assert.NotNull(account.UserName);
+            Assert.IsNotNull(account.ProfileUrl);
+            Assert.IsNotNull(account.UserName);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetCurrentUser()
         {
             var client = GetReadClient();
 
             var account = await client.GetCurrentUser();
 
-            Assert.NotNull(account.ProfileUrl);
-            Assert.NotNull(account.UserName);
+            Assert.IsNotNull(account.ProfileUrl);
+            Assert.IsNotNull(account.UserName);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetAccountRelationships()
         {
             var client = GetReadClient();
 
             var relationships = await client.GetAccountRelationships(1);
 
-            Assert.NotNull(relationships);
-            Assert.NotEqual(0, relationships.Count());
+            Assert.IsNotNull(relationships);
+            Assert.AreNotEqual(0, relationships.Count());
         }
     }
 }

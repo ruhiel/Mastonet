@@ -1,72 +1,73 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Mastonet.Tests
 {
+    [TestClass]
     public class FollowTests : MastodonClientTests
     {
-        [Fact]
+        [TestMethod]
         public async Task GetAccountFollowers()
         {
             var client = GetReadClient();
             var accounts = await client.GetAccountFollowers(1);
 
-            Assert.NotNull(accounts);
-            Assert.True(accounts.Any());
+            Assert.IsNotNull(accounts);
+            Assert.IsTrue(accounts.Any());
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetAccountFollowing()
         {
             var client = GetReadClient();
             var accounts = await client.GetAccountFollowing(1);
 
-            Assert.NotNull(accounts);
-            Assert.True(accounts.Any());
+            Assert.IsNotNull(accounts);
+            Assert.IsTrue(accounts.Any());
         }
 
-        [Fact]
+        [TestMethod]
         public async Task Follow()
         {
             // Follow local
             var client = GetFollowClient();
             var followedAccount = await client.Follow(1);
-            Assert.NotNull(followedAccount);
+            Assert.IsNotNull(followedAccount);
 
             //follow remote
             followedAccount = await client.Follow("");
-            Assert.NotNull(followedAccount);
+            Assert.IsNotNull(followedAccount);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task Unfollow()
         {
             var client = GetFollowClient();
             var unfollowedAccount = await client.Unfollow(1);
-            Assert.NotNull(unfollowedAccount);
+            Assert.IsNotNull(unfollowedAccount);
         }
 
 
-        [Fact]
+        [TestMethod]
         public async Task GetFollowRequests()
         {
             var client = GetFollowClient();
             var requests = await client.GetFollowRequests();
-            Assert.NotNull(requests);
+            Assert.IsNotNull(requests);
         }
 
-        [Fact]
+        [TestMethod]
         public async Task AuthorizeRequest()
         {
             var client = GetFollowClient();
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [TestMethod]
         public async Task RejectRequest()
         {
             var client = GetFollowClient();

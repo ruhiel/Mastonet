@@ -1,28 +1,29 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Mastonet.Tests
 {
+    [TestClass]
     public class NotificationTests : MastodonClientTests
     {
-        [Fact]
+        [TestMethod]
         public async Task GetNotifications()
         {
             var client = GetReadClient();
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [TestMethod]
         public async Task GetNotification()
         {
             var client = GetReadClient();
             throw new NotImplementedException();
         }
 
-        [Fact]
+        [TestMethod]
         public async Task ClearNotifications()
         {
             var client = GetReadClient();
