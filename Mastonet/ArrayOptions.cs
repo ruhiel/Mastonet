@@ -16,11 +16,11 @@ namespace Mastonet
             var query = new Collection<string>();
             if (this.MaxId.HasValue)
             {
-                query.Add("max_id=" + this.MaxId);
+                query.Add($"max_id={this.MaxId}");
             }
             if (this.SinceId.HasValue)
             {
-                query.Add("since_id=" + this.SinceId);
+                query.Add($"since_id={this.SinceId}");
             }
             return string.Join("&", query);
         }

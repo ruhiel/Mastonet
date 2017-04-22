@@ -29,7 +29,7 @@ namespace Mastonet
         public async void Start()
         {
             client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
 
             var stream = await client.GetStreamAsync(url);
 

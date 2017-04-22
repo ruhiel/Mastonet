@@ -72,23 +72,23 @@ namespace Mastonet
         /// <returns>Returns an array of Relationships of the current user to a list of given accounts</returns>
         public Task<Account> UpdateCredentials(string display_name = null, string note = null, string avatar = null, string header = null)
         {
-            var data = new List<KeyValuePair<string, string>>();
+            var data = new List<(string, string)>();
 
             if (display_name != null)
             {
-                data.Add(new KeyValuePair<string, string>("display_name", display_name));
+                data.Add(("display_name", display_name));
             }
             if (note != null)
             {
-                data.Add(new KeyValuePair<string, string>("note", note));
+                data.Add(("note", note));
             }
             if (avatar != null)
             {
-                data.Add(new KeyValuePair<string, string>("avatar", avatar));
+                data.Add(("avatar", avatar));
             }
             if (header != null)
             {
-                data.Add(new KeyValuePair<string, string>("header", header));
+                data.Add(("header", header));
             }
 
             return Patch<Account>($"/api/v1/accounts/update_credentials", data);
@@ -510,10 +510,10 @@ namespace Mastonet
         /// <returns>Returns the finished Report</returns>
         public Task<Report> Report(int accountId, IEnumerable<int> statusIds, string comment)
         {
-            var data = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("account_id", accountId.ToString()),
-                new KeyValuePair<string, string>("status_ids", JsonConvert.SerializeObject(statusIds)),
-                new KeyValuePair<string, string>("comment", comment),
+            var data = new List<(string, string)>() {
+                ("account_id", accountId.ToString()),
+                ("status_ids", JsonConvert.SerializeObject(statusIds)),
+                ("comment", comment)
             };
 
             return Post<Report>("/api/v1/reports", data);
@@ -550,14 +550,14 @@ namespace Mastonet
                 return Task.FromResult(Enumerable.Empty<Account>());
             }
 
-            string url = "/api/v1/accounts/search?q=" + Uri.EscapeUriString(q);
+            string url = $"/api/v1/accounts/search?q={Uri.EscapeUriString(q)}";
             if (limit.HasValue)
             {
-                url += "&limit=" + limit.Value;
+                url += $"&limit={limit.Value}";
             }
             if (options != null)
             {
-                url += "&" + options.ToQueryString();
+                url += $"&{options.ToQueryString()}";
             }
 
             return Get<IEnumerable<Account>>(url);
@@ -576,7 +576,7 @@ namespace Mastonet
                 return Task.FromResult(new Results());
             }
 
-            string url = "/api/v1/search?q=" + Uri.EscapeUriString(q);
+            string url = $"/api/v1/search?q={Uri.EscapeUriString(q)}";
             if (resolve)
             {
                 url += "&resolve=true";
@@ -701,7 +701,7 @@ namespace Mastonet
             var url = $"/api/v1/statuses/{statusId}/reblogged_by";
             if (options != null)
             {
-                url += "?" + options.ToQueryString();
+                url += $"?{options.ToQueryString()}";
             }
             return Get<IEnumerable<Account>>(url);
         }
@@ -729,7 +729,7 @@ namespace Mastonet
             var url = $"/api/v1/statuses/{statusId}/favourited_by";
             if (options != null)
             {
-                url += "?" + options.ToQueryString();
+                url += $"?{options.ToQueryString()}";
             }
             return Get<IEnumerable<Account>>(url);
         }
@@ -746,29 +746,29 @@ namespace Mastonet
         /// <returns></returns>
         public Task<Status> PostStatus(string status, Visibility visibility, int? replyStatusId = null, IEnumerable<int> mediaIds = null, bool sensitive = false, string spoilerText = null)
         {
-            var data = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("status", status),
+            var data = new List<(string, string)>() {
+                ("status", status),
             };
 
             if (replyStatusId.HasValue)
             {
-                data.Add(new KeyValuePair<string, string>("in_reply_to_id", replyStatusId.Value.ToString()));
+                data.Add(("in_reply_to_id", replyStatusId.Value.ToString()));
             }
             if (mediaIds != null && mediaIds.Any())
             {
                 var mediaJson = JsonConvert.SerializeObject(mediaIds);
-                data.Add(new KeyValuePair<string, string>("media_ids", mediaJson));
+                data.Add(("media_ids", mediaJson));
             }
             if (sensitive)
             {
-                data.Add(new KeyValuePair<string, string>("sensitive", "true"));
+                data.Add(("sensitive", "true"));
             }
             if (!string.IsNullOrEmpty(spoilerText))
             {
-                data.Add(new KeyValuePair<string, string>("spoiler_text", spoilerText));
+                data.Add(("spoiler_text", spoilerText));
             }
 
-            data.Add(new KeyValuePair<string, string>("visibility", visibility.ToString().ToLower()));
+            data.Add(("visibility", visibility.ToString().ToLower()));
 
             return Post<Status>("/api/v1/statuses", data);
         }
@@ -826,7 +826,7 @@ namespace Mastonet
             string url = "/api/v1/timelines/home";
             if (options != null)
             {
-                url += "?" + options.ToQueryString();
+                url += $"?{options.ToQueryString()}";
             }
             return Get<IEnumerable<Status>>(url);
         }
@@ -942,7 +942,7 @@ namespace Mastonet
 
         public TimelineStreaming GetPublicStreaming()
         {
-            string url = "https://" + StreamingApiUrl + "/api/v1/streaming/public";
+            string url = $"https://{StreamingApiUrl}/api/v1/streaming/public";
 
             return new TimelineStreaming(url, AuthToken.AccessToken);
         }
@@ -950,14 +950,14 @@ namespace Mastonet
         [Obsolete("Only use this method if the instance has a different streaming url. Please report the instance name here to allow us to support it : https://github.com/glacasa/Mastonet/issues/10")]
         public TimelineStreaming GetPublicStreaming(string streamingApiUrl)
         {
-            string url = "https://" + streamingApiUrl + "/api/v1/streaming/public";
+            string url = $"https://{streamingApiUrl}/api/v1/streaming/public";
 
             return new TimelineStreaming(url, AuthToken.AccessToken);
         }
 
         public TimelineStreaming GetUserStreaming()
         {
-            string url = "https://" + StreamingApiUrl + "/api/v1/streaming/user";
+            string url = $"https://{StreamingApiUrl}/api/v1/streaming/user";
 
             return new TimelineStreaming(url, AuthToken.AccessToken);
         }
@@ -965,7 +965,7 @@ namespace Mastonet
         [Obsolete("Only use this method if the instance has a different streaming url. Please report the instance name here to allow us to support it : https://github.com/glacasa/Mastonet/issues/10")]
         public TimelineStreaming GetUserStreaming(string streamingApiUrl)
         {
-            string url = "https://" + streamingApiUrl + "/api/v1/streaming/user";
+            string url = $"https://{streamingApiUrl}/api/v1/streaming/user";
 
             return new TimelineStreaming(url, AuthToken.AccessToken);
         }
@@ -977,7 +977,7 @@ namespace Mastonet
                 throw new ArgumentException("You must specify a hashtag", "hashtag");
             }
 
-            string url = "https://" + StreamingApiUrl + "/api/v1/streaming/hashtag?tag=" + hashtag;
+            string url = $"https://{StreamingApiUrl}/api/v1/streaming/hashtag?tag={hashtag}";
 
             return new TimelineStreaming(url, AuthToken.AccessToken);
         }
@@ -990,7 +990,7 @@ namespace Mastonet
                 throw new ArgumentException("You must specify a hashtag", "hashtag");
             }
 
-            string url = "https://" + streamingApiUrl + "/api/v1/streaming/hashtag?tag=" + hashtag;
+            string url = $"https://{streamingApiUrl}/api/v1/streaming/hashtag?tag={hashtag}";
 
             return new TimelineStreaming(url, AuthToken.AccessToken);
         }

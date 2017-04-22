@@ -31,21 +31,21 @@ namespace Mastonet
         /// <returns></returns>
         public async Task<AppRegistration> CreateApp(string appName, Scope scope, string website = null, string redirectUri = null)
         {
-            var data = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("client_name", appName),
-                new KeyValuePair<string, string>("scopes", GetScopeParam(scope)),
+            var data = new List<(string, string)>() {
+                ("client_name", appName),
+                ("scopes", GetScopeParam(scope)),
             };
             if (string.IsNullOrEmpty(redirectUri))
             {
-                data.Add(new KeyValuePair<string, string>("redirect_uris", "urn:ietf:wg:oauth:2.0:oob"));
+                data.Add(("redirect_uris", "urn:ietf:wg:oauth:2.0:oob"));
             }
             else
             {
-                data.Add(new KeyValuePair<string, string>("redirect_uris", redirectUri));
+                data.Add(("redirect_uris", redirectUri));
             }
             if (!string.IsNullOrEmpty(website))
             {
-                data.Add(new KeyValuePair<string, string>("website", website));
+                data.Add(("website", website));
             }
 
             var appRegistration = await Post<AppRegistration>("/api/v1/apps", data);
@@ -63,14 +63,14 @@ namespace Mastonet
 
         public async Task<Auth> ConnectWithPassword(string email, string password)
         {
-            var data = new List<KeyValuePair<string, string>>()
+            var data = new List<(string, string)>()
             {
-                new KeyValuePair<string, string>("client_id", AppRegistration.ClientId),
-                new KeyValuePair<string, string>("client_secret", AppRegistration.ClientSecret),
-                new KeyValuePair<string, string>("grant_type", "password"),
-                new KeyValuePair<string, string>("username", email),
-                new KeyValuePair<string, string>("password", password),
-                new KeyValuePair<string, string>("scope", GetScopeParam(AppRegistration.Scope)),
+                ("client_id", AppRegistration.ClientId),
+                ("client_secret", AppRegistration.ClientSecret),
+                ("grant_type", "password"),
+                ("username", email),
+                ("password", password),
+                ("scope", GetScopeParam(AppRegistration.Scope)),
             };
 
             var auth = await Post<Auth>("/oauth/token", data);
@@ -80,13 +80,13 @@ namespace Mastonet
 
         public async Task<Auth> ConnectWithCode(string code, string redirect_uri = null)
         {
-            var data = new List<KeyValuePair<string, string>>()
+            var data = new List<(string, string)>()
             {
-                new KeyValuePair<string, string>("client_id", AppRegistration.ClientId),
-                new KeyValuePair<string, string>("client_secret", AppRegistration.ClientSecret),
-                new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                new KeyValuePair<string, string>("redirect_uri", redirect_uri ?? "urn:ietf:wg:oauth:2.0:oob"),
-                new KeyValuePair<string, string>("code", code),
+                ("client_id", AppRegistration.ClientId),
+                ("client_secret", AppRegistration.ClientSecret),
+                ("grant_type", "authorization_code"),
+                ("redirect_uri", redirect_uri ?? "urn:ietf:wg:oauth:2.0:oob"),
+                ("code", code),
             };
 
             var auth = await Post<Auth>("/oauth/token", data);
